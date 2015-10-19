@@ -34,8 +34,11 @@
   var options = {
     fadeDuration: 700,
     hideOnClick: false,
+    hideOnClickEverywhere: false,
     hideOnESC: false,
-    findOnResize: false
+    findOnResize: false,
+    opacity: 0.6,
+    rgb: '0,0,0' 
   };
 
   $(document).ready(setup);
@@ -43,8 +46,6 @@
   function setup() {
     $columnWrapper = $('body');
     createPlugin();
-    addStylesheet();
-    addEvents();
   }
 
   /**
@@ -63,7 +64,9 @@
   }
 
   function addEvents() {
-    $columnWrapper.on('click', columnSelector, clickOnOverlay);
+    // add event click
+    if (options.hideOnClickEverywhere) $columnWrapper.on('click', clickOnOverlay);
+      $columnWrapper.on('click', columnSelector, clickOnOverlay);
     $(window).on("resize", resizeHandler);
     $(window).on("keyup", keyupHandler);
   }
@@ -95,7 +98,9 @@
     options = $.extend(options, userOptions);
     $element = $el;
     createColumns();
+    addStylesheet();
     $columnWrapper.find(columnSelector).fadeIn(options.fadeDuration);
+    addEvents();
   };
 
   function clearColumns() {
@@ -178,7 +183,7 @@
       return style.sheet;
     })();
 
-    sheet.insertRule(columnSelector + "{ display:none; position: absolute; z-index: 9999; background: rgba(0,0,0,0.8); }", 0);
+    sheet.insertRule(columnSelector + "{ display:none; position: absolute; z-index: 9999; background: rgba("+options.rgb+","+options.opacity+"); }", 0);
   }
 
   function getActiveElement() {
